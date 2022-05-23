@@ -185,41 +185,42 @@ void message(struct mosquitto *mosq, void *obj, const struct mosquitto_message *
     
 
     message_form* temp=(message_form*)(mos->message_form_pointer);
-    temp->ARMID=root.get(enum_SEND[0],"UTF-8").asUInt();
-    temp->UpperType=root.get(enum_SEND[1],"UTF-8").asUInt();
-    temp->X=root.get(enum_SEND[2],"UTF-8").asUInt();
-    temp->Y=root.get(enum_SEND[3],"UTF-8").asUInt();
-    temp->T=root.get(enum_SEND[4],"UTF-8").asUInt();
-    temp->State=root.get(enum_SEND[5],"UTF-8").asUInt();
-    temp->ChargeStatus=root.get(enum_SEND[6],"UTF-8").asUInt();
-    temp->ActionID=root.get(enum_SEND[7],"UTF-8").asUInt();
-    temp->Mode=root.get(enum_SEND[8],"UTF-8").asUInt();
-    temp->Loaded_1=root.get(enum_SEND[9],"UTF-8").asUInt();
-    temp->Loaded_2=root.get(enum_SEND[10],"UTF-8").asUInt();
-    temp->Loaded_3=root.get(enum_SEND[11],"UTF-8").asUInt();
-    temp->CurrentNode=root.get(enum_SEND[12],"UTF-8").asUInt();
-    temp->NextNode=root.get(enum_SEND[13],"UTF-8").asUInt();
-    temp->TargetNode=root.get(enum_SEND[14],"UTF-8").asUInt();
-    temp->Obstacle=root.get(enum_SEND[15],"UTF-8").asUInt();
-    temp->Speed=root.get(enum_SEND[16],"UTF-8").asUInt();
-    temp->MapRate=root.get(enum_SEND[17],"UTF-8").asUInt();
-    temp->ErrorCode1=root.get(enum_SEND[18],"UTF-8").asUInt();
-    temp->ErrorCode2=root.get(enum_SEND[19],"UTF-8").asUInt();
-    temp->ErrorCode3=root.get(enum_SEND[20],"UTF-8").asUInt();
-    temp->ErrorCode4=root.get(enum_SEND[21],"UTF-8").asUInt();
-    temp->ErrorCode5=root.get(enum_SEND[22],"UTF-8").asUInt();
-    temp->BatteryVolt=root.get(enum_SEND[23],"UTF-8").asUInt();
-    temp->BatteryTemp=root.get(enum_SEND[24],"UTF-8").asUInt();
-    temp->Battery=root.get(enum_SEND[25],"UTF-8").asUInt();
-    temp->ManualComplete=root.get(enum_SEND[26],"UTF-8").asUInt();
+    // temp->ARMID=stoi(root.get(enum_SEND[0],"UTF-8").asString());
+    // temp->UpperType=stoi(root.get(enum_SEND[1],"UTF-8").asString());
+    // temp->X=stoi(root.get(enum_SEND[2],"UTF-8").asString());
+    // temp->Y=stoi(root.get(enum_SEND[3],"UTF-8").asString());
+    // temp->T=stoi(root.get(enum_SEND[4],"UTF-8").asString());
+    // temp->State=stoi(root.get(enum_SEND[5],"UTF-8").asString());
+    // temp->ChargeStatus=stoi(root.get(enum_SEND[6],"UTF-8").asString());
+    // temp->ActionID=stoi(root.get(enum_SEND[7],"UTF-8").asString());
+    // temp->Mode=stoi(root.get(enum_SEND[8],"UTF-8").asString());
+    // temp->Loaded_1=stoi(root.get(enum_SEND[9],"UTF-8").asString());
+    // temp->Loaded_3=stoi(root.get(enum_SEND[11],"UTF-8").asString());
+    // temp->Loaded_2=stoi(root.get(enum_SEND[10],"UTF-8").asString());
+    // temp->CurrentNode=stoi(root.get(enum_SEND[12],"UTF-8").asString());
+    // temp->NextNode=stoi(root.get(enum_SEND[13],"UTF-8").asString());
+    // temp->TargetNode=stoi(root.get(enum_SEND[14],"UTF-8").asString());
+    // temp->Obstacle=stoi(root.get(enum_SEND[15],"UTF-8").asString());
+    // temp->Speed=stoi(root.get(enum_SEND[16],"UTF-8").asString());
+    // temp->MapRate=stoi(root.get(enum_SEND[17],"UTF-8").asString());
+    // temp->ErrorCode1=stoi(root.get(enum_SEND[18],"UTF-8").asString());
+    // temp->ErrorCode2=stoi(root.get(enum_SEND[19],"UTF-8").asString());
+    // temp->ErrorCode3=stoi(root.get(enum_SEND[20],"UTF-8").asString());
+    // temp->ErrorCode4=stoi(root.get(enum_SEND[21],"UTF-8").asString());
+    // temp->ErrorCode5=stoi(root.get(enum_SEND[22],"UTF-8").asString());
+    // temp->BatteryVolt=stoi(root.get(enum_SEND[23],"UTF-8").asString());
+    // temp->BatteryTemp=stoi(root.get(enum_SEND[24],"UTF-8").asString());
+    // temp->Battery=stoi(root.get(enum_SEND[25],"UTF-8").asString());
+    // temp->ManualComplete=stoi(root.get(enum_SEND[26],"UTF-8").asString());
     // strcpy(temp->ProtocalVer,root.get(enum_SEND[27],"UTF-8").asCString());
 
 
-
-    // for(int i=0;i<27;i++)
-    // {
-    //     *((uint16_t*)(mos->message_form_pointer)+i)=root.get(enum_SEND[i],"UTF-8").asUInt();
-    // }
+    // std::cout << "bb"<<std::endl;
+    for(int i=0;i<27;i++)
+    {
+        *((uint16_t*)(mos->message_form_pointer)+i)=stoi(root.get(enum_SEND[i],"UTF-8").asString());
+    }
+    strcpy(temp->ProtocalVer,root.get(enum_SEND[27],"UTF-8").asCString());
     // mosquitto_publish(mosq,NULL,(mos->topic_send).c_str(),msg->payloadlen,msg,0,0);
 }
 void mqtt_publisher::Print_Error(int Error)
@@ -257,11 +258,13 @@ std::string mqtt_publisher::convert_array_to_json(const void* data)
 }
 void mqtt_publisher::print_current_state()
 {
+    message_form* temp=(message_form*) message_form_pointer;
     std::cout <<"=============================="<<std::endl;
-    for(int i=0;i<28;i++)
+    for(int i=0;i<27;i++)
     {
         std::cout <<"="<<i+1<<". "<<enum_SEND[i]<<": "<<*(((uint16_t*)message_form_pointer)+i)<<std::endl;
     }
+    std::cout <<"="<<28<<". "<<enum_SEND[27]<<": "<<temp->ProtocalVer<<std::endl;
     std::cout <<"=============================="<<std::endl;
 }
 void mqtt_publisher::check_order()
@@ -282,24 +285,29 @@ void mqtt_publisher::check_order()
         std::cin>> key;
         if(key==1)
         {
+            AR_publish();
             break;
         }
         else if(key==2)
         {
+            AC_publish();
             break;
 
         }
         else if(key==3)
         {
+            AP_publish();
             break;
 
         }
         else if(key==4)
         {
+            AD_publish();
             break;
         }
         else if(key==5)
         {
+            DC_publish();
             break;
         }
         else if(key==6)
@@ -317,6 +325,46 @@ void mqtt_publisher::check_order()
         {
             std::cout <<"Wrong Order try again"<<std::endl;
         }
-    }
-   
+    }  
+}
+
+void mqtt_publisher::AR_publish()
+{
+    Json::Value root;
+    Json::StyledWriter writer;
+    root["Cmd"]="AR";
+    std::string msg=writer.write(root);
+    mosquitto_publish(mosq,NULL,(topic_send).c_str(),msg.size(),msg.c_str(),0,0);
+}
+void mqtt_publisher::AC_publish()
+{
+    Json::Value root;
+    Json::StyledWriter writer;
+    root["Cmd"]="AC";
+    std::string msg=writer.write(root);
+    mosquitto_publish(mosq,NULL,(topic_send).c_str(),msg.size(),msg.c_str(),0,0);
+}
+void mqtt_publisher::AP_publish()
+{
+    Json::Value root;
+    Json::StyledWriter writer;
+    root["Cmd"]="AP";
+    std::string msg=writer.write(root);
+    mosquitto_publish(mosq,NULL,(topic_send).c_str(),msg.size(),msg.c_str(),0,0);
+}
+void mqtt_publisher::AD_publish()
+{
+    Json::Value root;
+    Json::StyledWriter writer;
+    root["Cmd"]="AD";
+    std::string msg=writer.write(root);
+    mosquitto_publish(mosq,NULL,(topic_send).c_str(),msg.size(),msg.c_str(),0,0);    
+}
+void mqtt_publisher::DC_publish()
+{
+    Json::Value root;
+    Json::StyledWriter writer;
+    root["Cmd"]="DC";
+    std::string msg=writer.write(root);
+    mosquitto_publish(mosq,NULL,(topic_send).c_str(),msg.size(),msg.c_str(),0,0);
 }

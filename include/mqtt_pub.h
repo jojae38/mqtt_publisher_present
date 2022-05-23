@@ -35,6 +35,11 @@ class mqtt_publisher
         void Print_Error(int Error);
         int mqtt_init(const char * host,const int port, const std::string ID);
         void print_current_state();
+        void AR_publish();
+        void AC_publish();
+        void AP_publish();
+        void AD_publish();
+        void DC_publish();
         struct mosquitto *mosq;
         int error;
 };
